@@ -9,7 +9,8 @@ class BaseOptions():
         self.initialized = False
 
     def initialize(self):
-        self.parser.add_argument('--FILENAME_CALIB', type=str, default="data/calib_matrix.csv",help='dataroot of calibration matrix')
+        self.parser.add_argument('--FILENAME_CALIB', type=str, default="data/calib_matrix.csv",help='dataroot of calibration matrix for training')
+        self.parser.add_argument('--FILENAME_CALIB_TEST', type=str, default="data/calib_matrix_test.csv",help='dataroot of calibration matrix for testing (if None, use FILENAME_CALIB)')
         self.parser.add_argument('--multi_gpu', type=bool,default=False,help='whether use multi gpus')
         self.parser.add_argument('--gpu_ids',type=str,default='1',help='gpu id: e.g., 0,1,2...')
         self.parser.add_argument('--RESAMPLE_FACTOR', type=int,default=4,help='resize of the original image')

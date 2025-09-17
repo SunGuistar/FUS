@@ -32,8 +32,12 @@ class Visualizer_plot_volume():  # plot scan
         self.option = option
 
         self.data_pairs = data_pairs
+        # Use test calibration matrix if available, otherwise use training calibration matrix
+        calib_filename = getattr(self.opt, 'FILENAME_CALIB_TEST', self.opt.FILENAME_CALIB)
+        print(f"Using calibration file for testing: {calib_filename}")
+        
         self.tform_calib_scale, self.tform_calib_R_T, self.tform_calib = read_calib_matrices(
-            filename_calib=self.opt.FILENAME_CALIB,
+            filename_calib=calib_filename,
             resample_factor=self.opt.RESAMPLE_FACTOR,
             device=self.device#'cpu'#self.device''
         )
