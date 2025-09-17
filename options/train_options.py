@@ -38,7 +38,7 @@ class TrainOptions(BaseOptions):
         self.parser.add_argument('--LEARNING_RATE_rec',type=float,default=1e-4,help='learing rate for reconstruction network')
         self.parser.add_argument('--LEARNING_RATE_reg',type=float,default=1e-4,help='learing rate for registartion network')
 
-        self.parser.add_argument('--NUM_EPOCHS',type =int,default=int(1e6),help='# of iter to lin')
+        self.parser.add_argument('--NUM_EPOCHS',type =int,default=int(100),help='# of iter to lin')
         self.parser.add_argument('--max_rec_epoch_each_interation',type =int,default=int(2),help='# maxmum epoch to train rec or reg in each interation')
         self.parser.add_argument('--max_inter_rec_reg',type =int,default=int(500),help='# maxmum interation for training rec-reg models')
         self.parser.add_argument('--inter',type =str,default='iteratively',help='nointer/iteratively: iteratively or not ')
