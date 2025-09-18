@@ -341,6 +341,7 @@ class Train_Rec_Reg_Model():
 
 
 
+
     def train_rec_model(self):
         # train reconstruction network
 
@@ -466,7 +467,6 @@ class Train_Rec_Reg_Model():
             if epoch in range(0, self.opt.NUM_EPOCHS, self.opt.FREQ_INFO):
                 print('[Rec - Epoch %d] train-loss-rec=%.3f, train-dist=%.3f' % (epoch, train_epoch_loss_rec, train_epoch_dist))
 
-            
             # validation    
             if epoch in range(0, self.opt.NUM_EPOCHS, self.opt.val_fre):
                 self.model.train(False)
