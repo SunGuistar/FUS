@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 import os
 import torch.nn as nn
 import torch
+import time
 from torch.nn import MSELoss
 import torch.nn as nn
 from utils.loader import SSFrameDataset
@@ -362,6 +363,8 @@ class Train_Rec_Reg_Model():
         # using train set to evaluate regisatrtion network
 
         for epoch in range(int(self.opt.retain_epoch), int(self.opt.retain_epoch)+self.opt.NUM_EPOCHS):
+            # 记录epoch开始时间
+            epoch_start_time = time.time()
 
             train_epoch_loss = 0
             train_epoch_dist,train_epoch_wrap_dist = 0,0
@@ -712,6 +715,12 @@ class Train_Rec_Reg_Model():
                 self.model.train(True)
                 self.switch_off_batch_norm()
                 self.VoxelMorph_net.train(False)
+            
+            # 计算并打印epoch训练时长
+            epoch_end_time = time.time()
+            epoch_duration = epoch_end_time - epoch_start_time
+            if epoch in range(0, self.opt.NUM_EPOCHS, self.opt.FREQ_INFO):
+                print('[Meta - Epoch %d] 训练时长: %.2f秒 (%.2f分钟)' % (epoch, epoch_duration, epoch_duration/60))
         
 
         

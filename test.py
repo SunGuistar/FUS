@@ -24,17 +24,44 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 data_pairs = data_pairs_adjacent(opt.NUM_SAMPLES)
 data_pairs=torch.tensor(data_pairs)
 
-opt.FILENAME_VAL=opt.FILENAME_VAL+'_seqlen'+str(opt.NUM_SAMPLES)+'_'+opt.split_type+'_'+opt.train_set+'.json'
-opt.FILENAME_TEST=opt.FILENAME_TEST+'_seqlen'+str(opt.NUM_SAMPLES)+'_'+opt.split_type+'_'+opt.train_set+'.json'
-opt.FILENAME_TRAIN=[opt.FILENAME_TRAIN[i]+'_seqlen'+str(opt.NUM_SAMPLES)+'_'+opt.split_type+'_'+opt.train_set+'.json' for i in range(len(opt.FILENAME_TRAIN))]
+# Load datasets directly without JSON files - use all available data
+dset_val = SSFrameDataset(
+    min_scan_len=opt.MIN_SCAN_LEN,
+    data_path=Path(os.getcwd()).as_posix()+opt.DATA_PATH,
+    h5_file_name=opt.h5_file_name,
+    indices_in_use=None,  # Use all available data
+    num_samples=-1,  # Use all frames for testing
+    sample_range=opt.SAMPLE_RANGE,
+    split_type='val'
+)
 
-dset_val = SSFrameDataset.read_json(Path(os.getcwd()).as_posix()+opt.DATA_PATH,opt.FILENAME_VAL,opt.h5_file_name,num_samples = -1)
-dset_test = SSFrameDataset.read_json(Path(os.getcwd()).as_posix()+opt.DATA_PATH,opt.FILENAME_TEST,opt.h5_file_name,num_samples = -1)
-dset_train_list = [SSFrameDataset.read_json(Path(os.getcwd()).as_posix()+opt.DATA_PATH,opt.FILENAME_TRAIN[i],opt.h5_file_name,num_samples = -1) for i in range(len(opt.FILENAME_TRAIN))]
+dset_test = SSFrameDataset(
+    min_scan_len=opt.MIN_SCAN_LEN,
+    data_path=Path(os.getcwd()).as_posix()+opt.DATA_PATH,
+    h5_file_name=opt.h5_file_name,
+    indices_in_use=None,  # Use all available data
+    num_samples=-1,  # Use all frames for testing
+    sample_range=opt.SAMPLE_RANGE,
+    split_type='test'
+)
+
+dset_train_list = []
+for i in range(len(opt.FILENAME_TRAIN)):
+    dset_train = SSFrameDataset(
+        min_scan_len=opt.MIN_SCAN_LEN,
+        data_path=Path(os.getcwd()).as_posix()+opt.DATA_PATH,
+        h5_file_name=opt.h5_file_name,
+        indices_in_use=None,  # Use all available data
+        num_samples=-1,  # Use all frames for testing
+        sample_range=opt.SAMPLE_RANGE,
+        split_type='train'
+    )
+    dset_train_list.append(dset_train)
 
 dset_train = dset_train_list[0]+dset_train_list[1]+dset_train_list[2]
 # dset_val = dset_val+dset_train_list[2]
-print('using %s'%opt.h5_file_name)
+print('使用新的数据加载方式：从train/test/val目录读取多个h5文件')
+print('训练集扫描数: %d, 验证集扫描数: %d, 测试集扫描数: %d' % (dset_train.num_scans, dset_val.num_scans, dset_test.num_scans))
 
 
 

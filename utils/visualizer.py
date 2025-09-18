@@ -126,7 +126,15 @@ class Visualizer_plot_volume():  # plot scan
         frames, tforms, tforms_inv = (torch.tensor(t)[None,...].to(self.device) for t in [frames, tforms, tforms_inv])
         frames = frames/255
         saved_folder = saved_folder
-        saved_name = str(list(self.dset.indices_in_use[scan_index]))+'__'+self.dset.name_scan[self.dset.indices_in_use[scan_index][0], self.dset.indices_in_use[scan_index][1]].decode("utf-8")
+        # Handle name_scan for both old and new data loading approaches
+        if hasattr(self.dset, 'split_type') and self.dset.split_type in ['train', 'test', 'val']:
+            # New approach: use filename as name_scan
+            scan_idx = self.dset.indices_in_use[scan_index]
+            name_scan = self.dset._get_name_scan_for_scan(scan_idx)
+            saved_name = str(scan_idx) + '__' + name_scan
+        else:
+            # Old approach: use name_scan from h5 file
+            saved_name = str(list(self.dset.indices_in_use[scan_index]))+'__'+self.dset.name_scan[self.dset.indices_in_use[scan_index][0], self.dset.indices_in_use[scan_index][1]].decode("utf-8")
 
         idx = 0
         

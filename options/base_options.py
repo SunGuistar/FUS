@@ -9,14 +9,14 @@ class BaseOptions():
         self.initialized = False
 
     def initialize(self):
-        self.parser.add_argument('--FILENAME_CALIB', type=str, default="data/calib_matrix.csv",help='dataroot of calibration matrix for training')
-        self.parser.add_argument('--FILENAME_CALIB_TEST', type=str, default="data/calib_matrix_test.csv",help='dataroot of calibration matrix for testing (if None, use FILENAME_CALIB)')
-        self.parser.add_argument('--multi_gpu', type=bool,default=False,help='whether use multi gpus')
-        self.parser.add_argument('--gpu_ids',type=str,default='1',help='gpu id: e.g., 0,1,2...')
-        self.parser.add_argument('--RESAMPLE_FACTOR', type=int,default=4,help='resize of the original image')
-        self.parser.add_argument('--config', type=str,default='config/config_ete.json',help='config file')
-        self.parser.add_argument('--SAVE_PATH', type=str, default='results',help='foldername of saving path')
-        self.parser.add_argument('--DATA_PATH', type=str, default='/data', help='foldername of saving path')
+        self.parser.add_argument('--FILENAME_CALIB', type=str, default="data/calib_matrix.csv",help='训练用校准矩阵的数据路径')
+        self.parser.add_argument('--FILENAME_CALIB_TEST', type=str, default="data/calib_matrix_test.csv",help='测试用校准矩阵的数据路径（如果为None，则使用FILENAME_CALIB）')
+        self.parser.add_argument('--multi_gpu', type=bool,default=False,help='是否使用多GPU')
+        self.parser.add_argument('--gpu_ids',type=str,default='1',help='GPU ID：例如 0,1,2...')
+        self.parser.add_argument('--RESAMPLE_FACTOR', type=int,default=4,help='原始图像的重采样因子')
+        self.parser.add_argument('--config', type=str,default='config/config_ete.json',help='配置文件')
+        self.parser.add_argument('--SAVE_PATH', type=str, default='results',help='保存路径的文件夹名')
+        self.parser.add_argument('--DATA_PATH', type=str, default='/data', help='数据路径的文件夹名')
 
         self.initialized = True
 
