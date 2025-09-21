@@ -4,7 +4,10 @@ __pycache__/
 .DS_Store
 seq*/
 log/
-
+data/
+data_old/
+dataAll/
+*.h5
 
 
 
