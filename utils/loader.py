@@ -40,7 +40,7 @@ class SSFrameDataset():  # Subject-Scan frame loader
         elif isinstance(indices_in_use[0],list) and isinstance(indices_in_use[1],list):
             self.indices_in_use = [(i_sub,i_scn) for i_sub in indices_in_use[0] for i_scn in indices_in_use[1]]            
         else:
-            raise("indices_in_use should be a list of tuples (idx_subject, idx_scans) of two lists, [indices_subjects] and [indices_scans].")
+            raise ValueError("indices_in_use should be a list of tuples (idx_subject, idx_scans) of two lists, [indices_subjects] and [indices_scans].")
         
         if len(set(self.indices_in_use)) != len(self.indices_in_use):
             print("WARNING: Replicated indices are found - not removed.")
@@ -55,26 +55,38 @@ class SSFrameDataset():  # Subject-Scan frame loader
                     sample_range = None
                     print("Sampling all frames. sample_range is ignored.")
             else:
-                raise('num_samples should be greater than or equal to 2, or -1 for sampling all frames.')
+                raise ValueError('num_samples should be greater than or equal to 2, or -1 for sampling all frames.')
         self.num_samples = num_samples
         
         if sample_range is None:
             self.sample_range = self.num_samples
         elif any([self.num_frames[indices]<sample_range for indices in self.indices_in_use]):
-            raise("The specified sample_range is larger than number of frames in at least one of the in-use scans.")
+            raise ValueError("The specified sample_range is larger than number of frames in at least one of the in-use scans.")
         else:
             self.sample_range = sample_range
         
 
     def __add__(self, other):
-        if self.filename != other.filename:
-            raise('Currently different file combining is not supported.')
-        if self.num_samples != other.num_samples:
-            print('WARNING: found different num_samples - the first is used.')
-        if self.sample_range != other.sample_range:
-            print('WARNING: found different sample_range - the first is used.')
-        indices_combined = self.indices_in_use + other.indices_in_use
-        return SSFrameDataset(min_scan_len = self.min_scan_len,data_path = self.data_path, h5_file_name=self.h5_file_name, indices_in_use=indices_combined, num_samples=self.num_samples, sample_range=self.sample_range)
+        """
+        Enhanced __add__ method that supports multi-file combining.
+        Creates a MultiFileSSFrameDataset when combining different files.
+        """
+        # Import here to avoid circular imports
+        from .multi_file_loader import MultiFileSSFrameDataset
+        
+        # Check if files are the same (original behavior)
+        if self.filename == other.filename:
+            # Same file - use original combining logic
+            if self.num_samples != other.num_samples:
+                print('WARNING: found different num_samples - the first is used.')
+            if self.sample_range != other.sample_range:
+                print('WARNING: found different sample_range - the first is used.')
+            indices_combined = self.indices_in_use + other.indices_in_use
+            return SSFrameDataset(min_scan_len = self.min_scan_len,data_path = self.data_path, h5_file_name=self.h5_file_name, indices_in_use=indices_combined, num_samples=self.num_samples, sample_range=self.sample_range)
+        else:
+            # Different files - create MultiFileSSFrameDataset
+            print(f'INFO: Combining datasets from different files: {self.h5_file_name} + {other.h5_file_name}')
+            return MultiFileSSFrameDataset([self, other])
     
 
     def __len__(self):
