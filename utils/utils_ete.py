@@ -8,6 +8,8 @@ import torch.nn as nn
 import torch
 import json
 from torch.nn import MSELoss
+import time
+from datetime import datetime, timedelta
 import torch.nn as nn
 from utils.loader import SSFrameDataset
 from utils.network import build_model
@@ -351,6 +353,9 @@ class Train_Rec_Reg_Model():
         
 
         for epoch in range(int(self.opt.retain_epoch), int(self.opt.retain_epoch)+self.opt.NUM_EPOCHS):
+            # 记录epoch开始时间
+            epoch_start_time = time.time()
+            print(f"\n=== Epoch {epoch} Started ===")
 
             train_epoch_loss = 0
             train_epoch_dist,train_epoch_wrap_dist = 0,0
@@ -608,6 +613,13 @@ class Train_Rec_Reg_Model():
                 
                 self.VoxelMorph_net.train(True)
                 self.switch_off_batch_norm()
+            
+            # 计算并显示epoch总时长
+            epoch_end_time = time.time()
+            epoch_duration = epoch_end_time - epoch_start_time
+            epoch_duration_str = str(timedelta(seconds=int(epoch_duration)))
+            
+            print(f"=== Epoch {epoch} Completed in {epoch_duration_str} ===")
         
         
 
