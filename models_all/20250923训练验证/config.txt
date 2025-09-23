@@ -1,0 +1,174 @@
+------------ Options -------------
+BatchNorm,BNoff
+Conv_Coords,optimised_coord
+DATA_PATH,/data
+FILENAME_CALIB,data/calib_matrix.csv
+FILENAME_TEST,fold_04
+FILENAME_TRAIN,['fold_00', 'fold_01', 'fold_02']
+FILENAME_VAL,fold_03
+FREQ_INFO,1
+FREQ_SAVE,100
+LABEL_TYPE,transform
+LEARNING_RATE_rec,0.0001
+LEARNING_RATE_reg,0.0001
+Loss_type,rec_reg
+MAXNUM_PAIRS,50
+MINIBATCH_SIZE_rec,2
+MINIBATCH_SIZE_reg,2
+MIN_SCAN_LEN,108
+MODEL_FN,saved_model/
+NUM_EPOCHS,1000
+NUM_PRED,99
+NUM_SAMPLES,100
+PRED_TYPE,parameter
+RESAMPLE_FACTOR,4
+SAMPLE_RANGE,100
+SAVE_PATH,/root/autodl-tmp/oldFUS/models_all/seq_len100__Loss_rec_reg__bs_2__inc_reg_1__Move__ete
+config,config/config_ete.json
+ddf_dirc,Move
+gpu_ids,0
+h5_file_name,scans_res4_forth.h5
+img_pro_coord,pro_coord
+in_ch_reg,1
+initial,noninitial
+intepoletion_method,bilinear
+intepoletion_volume,fixed_interval
+inter,nointer
+isTrain,True
+max_inter_rec_reg,500
+max_rec_epoch_each_interation,2
+meta,nonmeta
+model_name,efficientnet_b1
+multi_gpu,False
+retain,False
+retain_epoch,00000000
+sample,True
+split_type,sub
+train_set,forth
+use_bash_shell,False
+val_fre,1
+------------ Options -------------
+------------ Options -------------
+BatchNorm,BNoff
+Conv_Coords,optimised_coord
+DATA_PATH,/data
+FILENAME_CALIB,data/calib_matrix.csv
+FILENAME_TEST,fold_04
+FILENAME_TRAIN,['fold_00', 'fold_01', 'fold_02']
+FILENAME_VAL,fold_03
+FREQ_INFO,1
+FREQ_SAVE,100
+LABEL_TYPE,transform
+LEARNING_RATE_rec,0.0001
+LEARNING_RATE_reg,0.0001
+Loss_type,rec_reg
+MAXNUM_PAIRS,50
+MINIBATCH_SIZE_rec,2
+MINIBATCH_SIZE_reg,2
+MIN_SCAN_LEN,108
+MODEL_FN,saved_model/
+NUM_EPOCHS,1000
+NUM_PRED,99
+NUM_SAMPLES,100
+PRED_TYPE,parameter
+RESAMPLE_FACTOR,4
+SAMPLE_RANGE,100
+SAVE_PATH,/root/autodl-tmp/oldFUS/models_all/seq_len100__Loss_rec_reg__bs_2__inc_reg_1__Move__ete
+config,config/config_ete.json
+ddf_dirc,Move
+gpu_ids,0
+h5_file_name,scans_res4_forth.h5
+img_pro_coord,pro_coord
+in_ch_reg,1
+initial,noninitial
+intepoletion_method,bilinear
+intepoletion_volume,fixed_interval
+inter,nointer
+isTrain,True
+max_inter_rec_reg,500
+max_rec_epoch_each_interation,2
+meta,nonmeta
+model_name,efficientnet_b1
+multi_gpu,False
+retain,False
+retain_epoch,00000000
+sample,True
+split_type,sub
+train_set,forth
+use_bash_shell,False
+val_fre,1
+------------ Options -------------
+------------ best val dist T - epoch 0: dist = 18.887677 -------------
+------------ best val dist R - epoch 0: dist = 18.887577 -------------
+------------ best val dist T - epoch 1: dist = 18.641512 -------------
+------------ best val dist R - epoch 1: dist = 18.774947 -------------
+------------ best val dist T - epoch 2: dist = 18.636710 -------------
+------------ best val dist R - epoch 2: dist = 18.760202 -------------
+------------ best val dist T - epoch 3: dist = 18.509722 -------------
+------------ best val dist T - epoch 7: dist = 18.426514 -------------
+------------ best val dist R - epoch 7: dist = 18.522714 -------------
+------------ best val dist T - epoch 9: dist = 18.067562 -------------
+------------ best val dist R - epoch 9: dist = 18.322531 -------------
+------------ best val dist T - epoch 13: dist = 18.063141 -------------
+------------ best val dist R - epoch 13: dist = 18.280307 -------------
+------------ best val dist R - epoch 16: dist = 18.101341 -------------
+------------ best val dist T - epoch 18: dist = 18.015608 -------------
+------------ best val dist R - epoch 22: dist = 18.035857 -------------
+------------ best val dist R - epoch 25: dist = 17.990387 -------------
+------------ best val dist R - epoch 34: dist = 17.942376 -------------
+------------ best val dist R - epoch 35: dist = 17.901798 -------------
+------------ best val dist R - epoch 38: dist = 17.822374 -------------
+------------ best val dist T - epoch 40: dist = 17.933308 -------------
+------------ best val dist R - epoch 52: dist = 17.808646 -------------
+------------ best val dist T - epoch 97: dist = 17.888386 -------------
+------------ best val dist T - epoch 228: dist = 17.820521 -------------
+------------ Options -------------
+BatchNorm,BNoff
+Conv_Coords,optimised_coord
+DATA_PATH,/data
+FILENAME_CALIB,data/calib_matrix.csv
+FILENAME_TEST,fold_04
+FILENAME_TRAIN,['fold_00', 'fold_01', 'fold_02']
+FILENAME_VAL,fold_03
+FREQ_INFO,1
+FREQ_SAVE,100
+LABEL_TYPE,transform
+LEARNING_RATE_rec,0.0001
+LEARNING_RATE_reg,0.0001
+Loss_type,rec_reg
+MAXNUM_PAIRS,50
+MINIBATCH_SIZE_rec,2
+MINIBATCH_SIZE_reg,2
+MIN_SCAN_LEN,108
+MODEL_FN,saved_model/
+NUM_EPOCHS,1000
+NUM_PRED,99
+NUM_SAMPLES,100
+PRED_TYPE,parameter
+RESAMPLE_FACTOR,4
+SAMPLE_RANGE,100
+SAVE_PATH,/root/autodl-tmp/oldFUS/models_all/seq_len100__Loss_rec_reg__bs_2__inc_reg_1__Move__ete
+config,config/config_ete.json
+ddf_dirc,Move
+gpu_ids,0
+h5_file_name,scans_res4_forth.h5
+img_pro_coord,pro_coord
+in_ch_reg,1
+initial,noninitial
+intepoletion_method,bilinear
+intepoletion_volume,fixed_interval
+inter,nointer
+isTrain,True
+max_inter_rec_reg,500
+max_rec_epoch_each_interation,2
+meta,nonmeta
+model_name,efficientnet_b1
+multi_gpu,False
+retain,False
+retain_epoch,00000000
+sample,True
+split_type,sub
+train_set,forth
+use_bash_shell,False
+val_fre,1
+------------ Options -------------
