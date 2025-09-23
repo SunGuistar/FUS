@@ -9,6 +9,26 @@ from utils.loader import SSFrameDataset
 from options.train_options import TrainOptions
 from utils.utils import str2list
 
+# 像素到毫米转换比例（基于校准矩阵）
+PIXEL_TO_MM_X = 0.229389190673828
+PIXEL_TO_MM_Y = 0.220979690551758
+PIXEL_TO_MM_Z = 1.0
+PIXEL_TO_MM_AVG = (PIXEL_TO_MM_X + PIXEL_TO_MM_Y) / 2  # 用于全局距离转换
+
+def convert_pixel_to_mm(pixel_value, is_global=True):
+    """
+    将像素值转换为毫米值
+    Args:
+        pixel_value: 像素值
+        is_global: 是否为全局距离（True）或局部距离（False）
+    Returns:
+        毫米值
+    """
+    if is_global:
+        return pixel_value * PIXEL_TO_MM_AVG
+    else:
+        return pixel_value * PIXEL_TO_MM_Z  # 局部距离已经是毫米单位
+
 from utils.utils_grid_data import *
 from utils.utils_meta import *
 sys.path.append(os.getcwd()+'/utils')
@@ -55,13 +75,23 @@ folders = sorted(folders)
 if not os.path.exists(os.getcwd()+'/'+test_folders+'/'+fd_name_save):
     os.makedirs(os.getcwd()+'/'+test_folders+'/'+fd_name_save)
 
-with open(os.getcwd()+'/'+test_folders+'/'+fd_name_save+'/'+csv_name, 'a', encoding='UTF8') as f:
+# 定义规范的CSV列名（合并均值和标准差）
+csv_headers = [
+    'file_name',
+    'model_name', 
+    'global_T_all_points_mm',
+    'global_T_R_all_points_mm',
+    'global_T_4_points_mm',
+    'global_T_R_4_points_mm',
+    'local_T_all_points_mm',
+    'local_T_4_points_mm'
+]
+
+# 创建CSV文件并写入表头
+csv_path = os.path.join(os.getcwd(), test_folders, fd_name_save, csv_name)
+with open(csv_path, 'w', newline='', encoding='UTF8') as f:
     writer = csv.writer(f)
-    # writer.writerow(['the volume of each sequence'])
-    writer.writerow(['file_name','model_name','points dist on all points using global T (mean.std) & ','points dist on all points using global T+R (prdiction + DDF)(mean.std) & '\
-                     'points dist on 4 points using global T (mean.std) & ','points dist on 4 points using global T+R (prdiction + DDF)(mean.std) & '\
-                      'points dist on all points using local T (mean.std) & ',\
-                        'points dist on 4 points using local T (mean.std) & '])
+    writer.writerow(csv_headers)
 
 for sub_fd in folders:
     # get paramteters from folder name
@@ -155,21 +185,61 @@ for sub_fd in folders:
             np.save(f, metrics)
         
         
-        with open(os.getcwd()+'/'+test_folders+'/'+fd_name_save+'/'+csv_name, 'a', encoding='UTF8') as f:
-            f.write(sub_fd)
-            f.write(' &  ')
-            f.write(str(model_name))
-            f.write(' &  ')
-            f.write('$%.2f\pm%.2f$ &  ' % (np.array(visualizer_scan_test.T_Global_AllPts_Dist).mean(), np.std(np.array(visualizer_scan_test.T_Global_AllPts_Dist))))
-            f.write('$%.2f\pm%.2f$ &  ' % (np.array(visualizer_scan_test.T_R_Warp_Global_AllPts_Dist).mean(), np.std(np.array(visualizer_scan_test.T_R_Warp_Global_AllPts_Dist))))
-            
-            f.write('$%.2f\pm%.2f$ &  ' % (np.array(visualizer_scan_test.T_Global_FourPts_Dist).mean(), np.std(np.array(visualizer_scan_test.T_Global_FourPts_Dist))))
-            f.write('$%.2f\pm%.2f$ &  ' % (np.array(visualizer_scan_test.T_R_Warp_Global_FourPts_Dist).mean(), np.std(np.array(visualizer_scan_test.T_R_Warp_Global_FourPts_Dist))))
-
-            f.write('$%.2f\pm%.2f$ &  ' % (np.array(visualizer_scan_test.T_Local_AllPts_Dist).mean(), np.std(np.array(visualizer_scan_test.T_Local_AllPts_Dist))))
-            f.write('$%.2f\pm%.2f$ &  ' % (np.array(visualizer_scan_test.T_Local_FourPts_Dist).mean(), np.std(np.array(visualizer_scan_test.T_Local_FourPts_Dist))))
-
-            f.write('\n')
+        # 计算毫米单位的指标
+        # 全局T变换-所有点
+        global_T_all_mean = convert_pixel_to_mm(np.array(visualizer_scan_test.T_Global_AllPts_Dist).mean(), True)
+        global_T_all_std = convert_pixel_to_mm(np.array(visualizer_scan_test.T_Global_AllPts_Dist).std(), True)
         
+        # 全局T+R变换-所有点
+        global_T_R_all_mean = convert_pixel_to_mm(np.array(visualizer_scan_test.T_R_Warp_Global_AllPts_Dist).mean(), True)
+        global_T_R_all_std = convert_pixel_to_mm(np.array(visualizer_scan_test.T_R_Warp_Global_AllPts_Dist).std(), True)
+        
+        # 全局T变换-4个点
+        global_T_4_mean = convert_pixel_to_mm(np.array(visualizer_scan_test.T_Global_FourPts_Dist).mean(), True)
+        global_T_4_std = convert_pixel_to_mm(np.array(visualizer_scan_test.T_Global_FourPts_Dist).std(), True)
+        
+        # 全局T+R变换-4个点
+        global_T_R_4_mean = convert_pixel_to_mm(np.array(visualizer_scan_test.T_R_Warp_Global_FourPts_Dist).mean(), True)
+        global_T_R_4_std = convert_pixel_to_mm(np.array(visualizer_scan_test.T_R_Warp_Global_FourPts_Dist).std(), True)
+        
+        # 局部T变换-所有点
+        local_T_all_mean = convert_pixel_to_mm(np.array(visualizer_scan_test.T_Local_AllPts_Dist).mean(), False)
+        local_T_all_std = convert_pixel_to_mm(np.array(visualizer_scan_test.T_Local_AllPts_Dist).std(), False)
+        
+        # 局部T变换-4个点
+        local_T_4_mean = convert_pixel_to_mm(np.array(visualizer_scan_test.T_Local_FourPts_Dist).mean(), False)
+        local_T_4_std = convert_pixel_to_mm(np.array(visualizer_scan_test.T_Local_FourPts_Dist).std(), False)
+        
+        # 准备CSV行数据（合并均值和标准差）
+        row_data = [
+            sub_fd,
+            str(model_name),
+            f"{global_T_all_mean:.2f}±{global_T_all_std:.2f}",
+            f"{global_T_R_all_mean:.2f}±{global_T_R_all_std:.2f}",
+            f"{global_T_4_mean:.2f}±{global_T_4_std:.2f}",
+            f"{global_T_R_4_mean:.2f}±{global_T_R_4_std:.2f}",
+            f"{local_T_all_mean:.2f}±{local_T_all_std:.2f}",
+            f"{local_T_4_mean:.2f}±{local_T_4_std:.2f}"
+        ]
+        
+        # 写入CSV
+        with open(csv_path, 'a', newline='', encoding='UTF8') as f:
+            writer = csv.writer(f)
+            writer.writerow(row_data)
+        
+        # 打印结果
+        print(f"  全局T变换-所有点: {global_T_all_mean:.2f}±{global_T_all_std:.2f} mm")
+        print(f"  全局T+R变换-所有点: {global_T_R_all_mean:.2f}±{global_T_R_all_std:.2f} mm")
+        print(f"  局部T变换-所有点: {local_T_all_mean:.2f}±{local_T_all_std:.2f} mm")
+
+print(f"\n测试完成！结果已保存到: {csv_path}")
+print(f"转换比例:")
+print(f"  全局距离: {PIXEL_TO_MM_AVG:.6f} mm/pixel")
+print(f"  局部距离: {PIXEL_TO_MM_Z:.1f} mm/pixel")
+print(f"CSV格式:")
+print(f"  - 使用标准CSV格式（逗号分隔）")
+print(f"  - 均值和标准差合并显示（格式：mean±std）")
+print(f"  - 所有距离单位转换为毫米")
+print(f"  - 列名简洁明确")
 
 
