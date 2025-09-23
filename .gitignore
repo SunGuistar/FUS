@@ -8,6 +8,7 @@ data/
 data_old/
 dataAll/
 *.h5
+/models_all
 
 
 
